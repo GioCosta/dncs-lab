@@ -1,0 +1,18 @@
+FirstName: Matteo
+LastName: Strada
+MatriculationNumber: 214980
+AcademicYear: 2019-2020
+GitHubUrl: YourGithubRepositoryURL
+Subnets:
+  HostsA:
+    RequiredAddresses: 281
+    SubnetAddress: YourHostsASubnetAddress
+    SubnetPrefixLength: YourHostsASubnetPrefixLength
+  HostsB:
+    RequiredAddresses: 420
+    SubnetAddress: YourHostsBSubnetAddress
+    SubnetPrefixLength: YourHostsBSubnetPrefixLength
+  Hub:
+    RequiredAddresses: 163
+    SubnetAddress: YourHubSubnetAddress
+    SubnetPrefixLength: YourHubSubnetPrefixLength
