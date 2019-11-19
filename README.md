@@ -1,12 +1,11 @@
 # DNCS-LAB
-Design of Networks and Communication Systems
-A.Y. 2019/20
-University of Trento
+Design of Networks and Communication Systems, A.Y. 2019/20,University of Trento
+
 Students:
 - Matteo Strada, MAT: 214980
 - Giovanni Costa, MAT: 
 
-## Assignment
+## Topology
 This repository contains the Vagrant files required to run the virtual lab environment used in the DNCS course.
 ```
 
@@ -23,7 +22,7 @@ This repository contains the Vagrant files required to run the virtual lab envir
         |  M  |                +------------+             +------------+
         |  A  |                      |eth1                       |eth1
         |  N  |                      |                           |
-        |  A  |                      |                           |
+        |  A  |                      |                           |eth1
         |  G  |                      |                     +-----+----+
         |  E  |                      |eth1                 |          |
         |  M  |            +-------------------+           |          |
@@ -124,4 +123,46 @@ The assignment deliverable consists of a Github repository containing:
 
 
 # Design
-[ Your work goes here ]
+## Network configuration
+### Subnets
+
+As per assignment request, the network topology is divided in 4 different subnets:
+
+| Subnet name |  Subnet address  |        Netmask       |      Devices      |
+|:-----------:|:----------------:|:--------------------:|:-----------------:|
+|      A      |  192.168.0.0/23  |  255.255.254.0 = 23  | *host-1-a*, *router-1* |
+|      B      | 192.168.2.0/23   |  255.255.254.0 = 23  | *host-1-b*, *router-1* |
+|      C      |  172.16.0.0/24   | 255.255.255.252 = 24 | *host-2-c*, *router-2* |
+|      D      | 192.168.255.252/30 | 255.255.255.252 = 30 | *router-1*, *router-2* |
+
+
+* Subnet **A** includes *host-1-a* and *router-1*. It has a */23* subnet mask to allow up to 2<sup>32-23</sup>-2= 510 hosts (assignment request was 281 hosts)
+* Subnet **B** includes *host-1-b* and *router-1*. It has a */23* subnet mask to allow up to 2<sup>32-23</sup>-2= 510 hosts (assignment request was 420 hosts)
+* Subnet **C** includes *router-2* and *host-2-c*. It has a */30* subnet mask to allow up to 2<sup>32-24</sup>-2= 254 hosts (assignment request was 163 hosts)
+* Subnet **D** includes *router-1* and *router-2*. It has a */30* subnet mask to allow up to 2<sup>32-30</sup>-2= 2 hosts (subnet completely used)
+
+### VLANs
+
+Due to network topology structure, there is a need for the configuration of 2 VLANs to allow *router-1* communicate with subnet **A** and **B** via its unique connection.
+
+The VIDs have been set as following:
+
+| VID | Subnet |
+|:---:|:------:|
+|  10 |    A   |
+|  20 |    B   |
+
+### IP interface setup
+
+The IP assegnation summary for every interface:
+
+|  Device  | Interface |     IP address     | Subnet |
+|:--------:|:---------:|:------------------:|:------:|
+| host-1-a |    eth1   |   192.168.0.1/23   |    A   |
+| router-1 |  eth1.10  |  192.168.1.254/23  |    A   |
+| host-1-b |    eth1   |   192.168.2.1/23   |    B   |
+| router-1 |  eth1.20  |  192.168.3.254/23  |    B   |
+| router-2 |    eth1   |    172.16.0.1/24   |    C   |
+| host-2-c |    eth1   |  172.16.0.254/24   |    C   |
+| router-1 |    eth2   | 192.168.255.253/30 |    D   |
+| router-2 |    eth2   | 192.168.255.254/30 |    D   |
