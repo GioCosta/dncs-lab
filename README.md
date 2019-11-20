@@ -156,16 +156,16 @@ The VIDs have been set as following:
 
 The IP assegnation summary for every interface:
 
-|  Device  | Interface |     IP address     | Subnet |
-|:--------:|:---------:|:------------------:|:------:|
-| host-1-a |    eth1   |   192.168.0.1/23   |    A   |
-| router-1 |  eth1.10  |  192.168.1.254/23  |    A   |
-| host-1-b |    eth1   |   192.168.2.1/23   |    B   |
-| router-1 |  eth1.20  |  192.168.3.254/23  |    B   |
-| router-2 |    eth1   |    172.16.0.1/24   |    C   |
-| host-2-c |    eth1   |  172.16.0.254/24   |    C   |
-| router-1 |    eth2   | 192.168.255.253/30 |    D   |
-| router-2 |    eth2   | 192.168.255.254/30 |    D   |
+|  Device  |  Interface  |     IP address     | Subnet |
+|:--------:|:-----------:|:------------------:|:------:|
+| host-1-a |    enp0s8   |   192.168.0.1/23   |    A   |
+| router-1 |  enp0s8.10  |  192.168.1.254/23  |    A   |
+| host-1-b |    enp0s8   |   192.168.2.1/23   |    B   |
+| router-1 |  enp0s8.20  |  192.168.3.254/23  |    B   |
+| router-2 |    enp0s8   |   172.16.0.254/24  |    C   |
+| host-2-c |    enp0s8   |   172.16.0.1/24    |    C   |
+| router-1 |    enp0s9   | 192.168.255.253/30 |    D   |
+| router-2 |    enp0s9   | 192.168.255.254/30 |    D   |
 
 # Vagrant VM Configuration
 In the Vagrantfile each VM is created with the following example code:
