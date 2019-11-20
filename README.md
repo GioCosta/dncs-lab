@@ -166,3 +166,150 @@ The IP assegnation summary for every interface:
 | host-2-c |    eth1   |  172.16.0.254/24   |    C   |
 | router-1 |    eth2   | 192.168.255.253/30 |    D   |
 | router-2 |    eth2   | 192.168.255.254/30 |    D   |
+
+# Vagrant VM Configuration
+In the Vagrantfile each VM is created with the following example code:
+```ruby
+config.vm.define "machine-name" do |machine-name|
+  ...
+  ...
+end
+```
+
+Vagrant is set up so that every device has its specific configuration script.
+All devices are created with *bionic64* Vagrant box, and virtualbox as provider.
+
+### Devices
+#### Router 1
+VM for *router-1* is created with the following code in the Vagrantfile:
+```ruby
+ config.vm.define "router-1" do |router1|
+    router1.vm.box = "ubuntu/bionic64"
+    router1.vm.hostname = "router-1"
+    router1.vm.network "private_network", virtualbox__intnet: "router1-switch", auto_config: false
+    router1.vm.network "private_network", virtualbox__intnet: "router1-router2", auto_config: false
+    router1.vm.provision "shell", path: "router-1.sh"
+    router1.vm.provider "virtualbox" do |vb|
+      vb.memory = 256
+    end
+  end
+```
+
+Interfaces created:
+* *eth1* connected with *switch* device
+* *eth2* connect with *router-2* device
+
+After the creation of the VM, Vagrant will run *common.sh* provisioning script.
+##### *Router 1* provisioning script
++script explanation
+
+#### Router 2
+VM for *router-2* is created with the following code in the Vagrantfile:
+```ruby
+  config.vm.define "router-2" do |router2|
+    router2.vm.box = "ubuntu/bionic64"
+    router2.vm.hostname = "router-2"
+    router2.vm.network "private_network", virtualbox__intnet: "router2-hostc", auto_config: false
+    router2.vm.network "private_network", virtualbox__intnet: "router2-router1", auto_config: false
+    router2.vm.provision "shell", path: "router-2.sh"
+    router2.vm.provider "virtualbox" do |vb|
+      vb.memory = 256
+    end
+  end
+```
+
+Interfaces created:
+* *eth1* connected with *host-2c* device
+* *eth2* connect with *router-1* device
+
+After the creation of the VM, Vagrant will run *common.sh* provisioning script.
+##### *Router 2* provisioning script
++script explanation
+
+#### Host 1A
+VM for *host-1a* is created with the following code in the Vagrantfile:
+```ruby
+  config.vm.define "host-a" do |hosta|
+    hosta.vm.box = "ubuntu/bionic64"
+    hosta.vm.hostname = "host-a"
+    hosta.vm.network "private_network", virtualbox__intnet: "hosta-switch", auto_config: false
+    hosta.vm.provision "shell", path: "host-1a.sh"
+    hosta.vm.provider "virtualbox" do |vb|
+      vb.memory = 256
+    end
+  end
+```
+
+Interfaces created:
+* *eth1* connected with *switch* device
+
+After the creation of the VM, Vagrant will run *common.sh* provisioning script.
+##### *Host 1A* provisioning script
++script explanation
+
+#### Host 1B
+VM for *host-1b* is created with the following code in the Vagrantfile:
+```ruby
+  config.vm.define "host-b" do |hostb|
+    hostb.vm.box = "ubuntu/bionic64"
+    hostb.vm.hostname = "host-b"
+    hostb.vm.network "private_network", virtualbox__intnet: "hostb-switch", auto_config: false
+    hostb.vm.provision "shell", path: "host-1b.sh"
+    hostb.vm.provider "virtualbox" do |vb|
+      vb.memory = 256
+    end
+  end
+```
+
+Interfaces created:
+* *eth1* connected with *switch* device
+
+After the creation of the VM, Vagrant will run *common.sh* provisioning script.
+##### *Host 1B* provisioning script
++script explanation
+
+#### Host 2C
+VM for *host-2c* is created with the following code in the Vagrantfile:
+```ruby
+  config.vm.define "host-c" do |hostc|
+    hostc.vm.box = "ubuntu/bionic64"
+    hostc.vm.hostname = "host-c"
+    hostc.vm.network "private_network", virtualbox__intnet: "hostc-router2", auto_config: false
+    hostc.vm.provision "shell", path: "host-2c.sh"
+    hostc.vm.provider "virtualbox" do |vb|
+      vb.memory = 256
+    end
+  end
+```
+
+Interfaces created:
+* *eth1* connected with *router-2* device
+
+After the creation of the VM, Vagrant will run *common.sh* provisioning script.
+##### *Host 2C* provisioning script
++script explanation
+
+#### Switch
+VM for *switch* is created with the following code in the Vagrantfile:
+```ruby
+ config.vm.define "switch" do |switch|
+    switch.vm.box = "ubuntu/bionic64"
+    switch.vm.hostname = "switch"
+    switch.vm.network "private_network", virtualbox__intnet: "switch-router1", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "switch-hosta", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "switch-hostb", auto_config: false
+    switch.vm.provision "shell", path: "switch.sh"
+    switch.vm.provider "virtualbox" do |vb|
+      vb.memory = 256
+    end
+  end
+```
+
+Interfaces created:
+* *eth1* connected with *router-1* device
+* *eth2* connected with *host-1a* device
+* *eth3* connected with *host-1b* device
+
+After the creation of the VM, Vagrant will run *switch.sh* provisioning script.
+##### *Switch* provisioning script
++script explanation

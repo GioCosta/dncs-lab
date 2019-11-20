@@ -19,9 +19,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "router-1" do |router1|
     router1.vm.box = "ubuntu/bionic64"
     router1.vm.hostname = "router-1"
-    router1.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
-    router1.vm.network "private_network", virtualbox__intnet: "broadcast_router-inter", auto_config: false
-    router1.vm.provision "shell", path: "common.sh"
+    router1.vm.network "private_network", virtualbox__intnet: "router1-switch", auto_config: false
+    router1.vm.network "private_network", virtualbox__intnet: "router1-router2", auto_config: false
+    router1.vm.provision "shell", path: "router-1.sh"
     router1.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -29,9 +29,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "router-2" do |router2|
     router2.vm.box = "ubuntu/bionic64"
     router2.vm.hostname = "router-2"
-    router2.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-2", auto_config: false
-    router2.vm.network "private_network", virtualbox__intnet: "broadcast_router-inter", auto_config: false
-    router2.vm.provision "shell", path: "common.sh"
+    router2.vm.network "private_network", virtualbox__intnet: "router2-hostc", auto_config: false
+    router2.vm.network "private_network", virtualbox__intnet: "router2-router1", auto_config: false
+    router2.vm.provision "shell", path: "router-2.sh"
     router2.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -39,9 +39,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "switch" do |switch|
     switch.vm.box = "ubuntu/bionic64"
     switch.vm.hostname = "switch"
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "switch-router1", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "switch-hosta", auto_config: false
+    switch.vm.network "private_network", virtualbox__intnet: "switch-hostb", auto_config: false
     switch.vm.provision "shell", path: "switch.sh"
     switch.vm.provider "virtualbox" do |vb|
       vb.memory = 256
@@ -50,8 +50,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "host-a" do |hosta|
     hosta.vm.box = "ubuntu/bionic64"
     hosta.vm.hostname = "host-a"
-    hosta.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
-    hosta.vm.provision "shell", path: "common.sh"
+    hosta.vm.network "private_network", virtualbox__intnet: "hosta-switch", auto_config: false
+    hosta.vm.provision "shell", path: "host-1a.sh"
     hosta.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -59,8 +59,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "host-b" do |hostb|
     hostb.vm.box = "ubuntu/bionic64"
     hostb.vm.hostname = "host-b"
-    hostb.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
-    hostb.vm.provision "shell", path: "common.sh"
+    hostb.vm.network "private_network", virtualbox__intnet: "hostb-switch", auto_config: false
+    hostb.vm.provision "shell", path: "host-1b.sh"
     hostb.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
@@ -68,8 +68,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "host-c" do |hostc|
     hostc.vm.box = "ubuntu/bionic64"
     hostc.vm.hostname = "host-c"
-    hostc.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-2", auto_config: false
-    hostc.vm.provision "shell", path: "common.sh"
+    hostc.vm.network "private_network", virtualbox__intnet: "hostc-router2", auto_config: false
+    hostc.vm.provision "shell", path: "host-2c.sh"
     hostc.vm.provider "virtualbox" do |vb|
       vb.memory = 256
     end
