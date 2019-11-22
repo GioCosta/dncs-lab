@@ -131,7 +131,7 @@ As per assignment request, the network topology is divided in 4 different subnet
 | Subnet name |  Subnet address  |        Netmask       |      Devices      |
 |:-----------:|:----------------:|:--------------------:|:-----------------:|
 |      A      |  192.168.0.0/23  |  255.255.254.0 = 23  | *host-1-a*, *router-1* |
-|      B      | 192.168.2.0/23   |  255.255.254.0 = 23  | *host-1-b*, *router-1* |
+|      B      | 192.168.4.0/23   |  255.255.254.0 = 23  | *host-1-b*, *router-1* |
 |      C      |  172.16.0.0/24   | 255.255.255.252 = 24 | *host-2-c*, *router-2* |
 |      D      | 192.168.255.252/30 | 255.255.255.252 = 30 | *router-1*, *router-2* |
 
@@ -160,8 +160,8 @@ The IP assegnation summary for every interface:
 |:--------:|:-----------:|:------------------:|:------:|
 | host-1-a |    enp0s8   |   192.168.0.1/23   |    A   |
 | router-1 |  enp0s8.10  |  192.168.1.254/23  |    A   |
-| host-1-b |    enp0s8   |   192.168.2.1/23   |    B   |
-| router-1 |  enp0s8.20  |  192.168.3.254/23  |    B   |
+| host-1-b |    enp0s8   |   192.168.4.1/23   |    B   |
+| router-1 |  enp0s8.20  |  192.168.5.254/23  |    B   |
 | router-2 |    enp0s8   |   172.16.0.254/24  |    C   |
 | host-2-c |    enp0s8   |   172.16.0.1/24    |    C   |
 | router-1 |    enp0s9   | 192.168.255.253/30 |    D   |

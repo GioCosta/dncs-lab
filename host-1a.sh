@@ -5,4 +5,4 @@ apt-get install -y tcpdump
 apt-get install -y openvswitch-common openvswitch-switch apt-transport-https ca-certificates curl software-properties-common
 ip addr add 192.168.0.1/23 dev enp0s8
 ip link set enp0s8 up
-ip route replace 192.168.0.0/16 via 192.168.1.254
+ip route replace 192.168.0.0/16 via 192.168.0.1 dev enp0s8
