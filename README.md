@@ -3,7 +3,7 @@ Design of Networks and Communication Systems, A.Y. 2019/20,University of Trento
 
 Students:
 - Matteo Strada, MAT: 214980
-- Giovanni Costa, MAT: 
+- Giovanni Costa, MAT: 188330
 
 ## Topology
 This repository contains the Vagrant files required to run the virtual lab environment used in the DNCS course.
