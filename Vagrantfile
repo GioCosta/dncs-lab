@@ -39,9 +39,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "switch" do |switch|
     switch.vm.box = "ubuntu/bionic64"
     switch.vm.hostname = "switch"
+    switch.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_a", auto_config: false
     switch.vm.network "private_network", virtualbox__intnet: "broadcast_host_b", auto_config: false
-    switch.vm.network "private_network", virtualbox__intnet: "broadcast_router-south-1", auto_config: false
     switch.vm.provision "shell", path: "switch.sh"
     switch.vm.provider "virtualbox" do |vb|
       vb.memory = 256
