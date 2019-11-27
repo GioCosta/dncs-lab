@@ -369,7 +369,17 @@ Interfaces created:
 
 After the creation of the VM, Vagrant will run *host-2c.sh* provisioning script.
 ##### *Host 2C* provisioning script
-*THE PART RELATED TO DOCKER NEED TO BE ADDED*
+These lines are used to setup a repository and install docker engine
+```bash
+sudo su
+apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+apt-get update
+apt-get install -y docker-ce
+```
+
 This line switches on the interface needed:
 ```bash
 ip link set dev enp0s8 up
@@ -383,6 +393,16 @@ ip addr add 192.168.6.1/24 dev enp0s8
 These line is used to create a static route between *host-c* and *router-1*, *router-2*, *host-a*, *host-b* usign the interface enp0s8 with gateway 192.168.6.254:
 ```bash
 ip route add 192.168.0.0/16 via 192.168.6.254 dev enp0s8
+```
+
+This line is used to pull the requested image from DockerHub
+```bash
+sudo docker pull dustnic82/nginx-test:latest
+```
+
+This line is used to run the image pulled
+```bash
+sudo docker run --name Test-docker -p 80:80 -d dustnic82/nginx-test:latest
 ```
 
 #### Switch
