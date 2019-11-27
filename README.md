@@ -369,7 +369,7 @@ Interfaces created:
 
 After the creation of the VM, Vagrant will run *host-2c.sh* provisioning script.
 ##### *Host 2C* provisioning script
-These lines are used to setup a repository and install docker engine
+These lines are used to setup a repository and install docker engine:
 ```bash
 sudo su
 apt-get update
@@ -395,16 +395,25 @@ These line is used to create a static route between *host-c* and *router-1*, *ro
 ip route add 192.168.0.0/16 via 192.168.6.254 dev enp0s8
 ```
 
-This line is used to pull the requested image from DockerHub
+This line is used to pull the requested image from DockerHub:
 ```bash
 sudo docker pull dustnic82/nginx-test:latest
 ```
 
-This line is used to run the image pulled
+This line is used to run the image pulled:
 ```bash
 sudo docker run --name Test-docker -p 80:80 -d dustnic82/nginx-test:latest
 ```
+##### Testing docker
+To verify that the docker image is running the following command can be used from host-c:
+```bash
+sudo docker pc
+```
 
+This is the command to reach the docker from host-a and host-b:
+```bash
+curl 192.168.6.1
+```
 #### Switch
 VM for *switch* is created with the following code in the Vagrantfile:
 ```ruby
