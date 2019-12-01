@@ -131,9 +131,9 @@ As per assignment request, the network topology is divided in 4 different subnet
 | Subnet name |  Subnet address  |        Netmask       |         Devices        |
 |:-----------:|:----------------:|:--------------------:|:----------------------:|
 |      A      |  192.168.0.0/23  |  255.255.254.0 = 23  | *host-1-a*, *router-1* |
-|      B      | 192.168.4.0/23   |  255.255.254.0 = 23  | *host-1-b*, *router-1* |
-|      C      |  192.168.6.0/24  | 255.255.255.252 = 24 | *host-2-c*, *router-2* |
-|      D      | 192.168.7.0/30   | 255.255.255.252 = 30 | *router-1*, *router-2* |
+|      B      | 192.168.2.0/23   |  255.255.254.0 = 23  | *host-1-b*, *router-1* |
+|      C      |  192.168.4.0/24  | 255.255.255.252 = 24 | *host-2-c*, *router-2* |
+|      D      | 192.168.5.0/30   | 255.255.255.252 = 30 | *router-1*, *router-2* |
 
 
 * Subnet **A** includes *host-1-a* and *router-1*. It has a */23* subnet mask to allow up to 2<sup>32-23</sup>-2= 510 hosts (assignment request was 281 hosts)
@@ -143,10 +143,11 @@ As per assignment request, the network topology is divided in 4 different subnet
 
 ### VLAN Setup
 There is the need to use VLANs in order to two different subnets with the same interface of *router-1*. The VLAN IDs have been choosen as follows:
-|  ID  |  Subnet  |
-|:----:|:--------:|
-| 100  |    A     |
-| 200  |    B     | 
+| VID  | Subnet |
+| ---- | ------ |
+| 100  | A      |
+| 200  | B      |
+
 
 ### IP interface setup
 
@@ -156,12 +157,14 @@ The IP assegnation summary for every interface:
 |:--------:|:-----------:|:------------------:|:------:|
 | host-1-a |    enp0s8   |   192.168.0.1/23   |    A   |
 | router-1 | enp0s8.100  |  192.168.1.254/23  |    A   |
-| host-1-b |    enp0s8   |   192.168.4.1/23   |    B   |
-| router-1 | enp0s8.200  |  192.168.5.254/23  |    B   |
-| router-2 |    enp0s8   |  192.168.6.254/24  |    C   |
-| host-2-c |    enp0s8   |   192.168.6.1/24   |    C   |
-| router-1 |    enp0s9   |   192.168.7.1/30   |    D   |
-| router-2 |    enp0s9   |   192.168.7.2/30   |    D   |
+| host-1-b |    enp0s8   |   192.168.2.1/23   |    B   |
+| router-1 | enp0s8.200  |  192.168.3.254/23  |    B   |
+| router-2 |    enp0s8   |  192.168.4.254/24  |    C   |
+| host-2-c |    enp0s8   |   192.168.4.1/24   |    C   |
+| router-1 |    enp0s9   |   192.168.5.1/30   |    D   |
+| router-2 |    enp0s9   |   192.168.5.2/30   |    D   |
+
+We decided to assign IP addresses all of the type 192.168.x.x in order to use the less amount of addresses and have them contigous.
 
 # Vagrant VM Configuration
 In the Vagrantfile each VM is created with the following example code:
@@ -214,13 +217,13 @@ ip link set dev enp0s9 up
 These lines are needed to assign the appropriate IP addresses to the interfaces:
 ```bash
 ip addr add 192.168.1.254/23 dev enp0s8.100
-ip addr add 192.168.5.254/23 dev enp0s8.200
-ip addr add 192.168.7.1/30 dev enp0s9
+ip addr add 192.168.3.254/23 dev enp0s8.200
+ip addr add 192.168.5.1/30 dev enp0s9
 ```
 
 These line is used to create a static route between *router-1* and *router-2* usign the interface enp0s9 with gateway 192.168.7.2:
 ```bash
-ip route add 192.168.6.0/24 via 192.168.7.2 dev enp0s9
+ip route add 192.168.4.0/24 via 192.168.5.2 dev enp0s9
 ```
 
 Finally this line abilitates the ip forwarding feature on *router-1*:
@@ -258,13 +261,13 @@ ip link set dev enp0s9 up
 
 These lines are needed to assign the appropriate IP addresses to the interfaces:
 ```bash
-ip addr add 192.168.6.254/24 dev enp0s8
-ip addr add 192.168.7.2/30 dev enp0s9
+ip addr add 192.168.4.254/24 dev enp0s8
+ip addr add 192.168.5.2/30 dev enp0s9
 ```
 
 These line is used to create a static route between *router-2* and *router-1* usign the interface enp0s9 with gateway 192.168.7.1:
 ```bash
-ip route add 192.168.0.0/16 via 192.168.7.1 dev enp0s9
+ip route add 192.168.0.0/16 via 192.168.5.1 dev enp0s9
 ```
 
 Finally this line abilitates the ip forwarding feature on *router-2*:
@@ -303,7 +306,7 @@ ip addr add 192.168.0.1/23 dev enp0s8
 
 These line is used to create a static route between *host-a* and *router-1*, *router-2*, *host-c* usign the interface enp0s8 with gateway 192.168.1.254:
 ```bash
-ip route add 192.168.6.0/23 via 192.168.1.254 dev enp0s8
+ip route add 192.168.4.0/23 via 192.168.1.254 dev enp0s8
 ```
 
 This line is used to make communication between subnet A and B available. If someone wish to do so, the line before should be commented and this one uncommented:
@@ -337,12 +340,12 @@ ip link set dev enp0s8 up
 
 This line assigns the appropriate IP address to the interface:
 ```bash
-ip addr add 192.168.4.1/23 dev enp0s8
+ip addr add 192.168.2.1/23 dev enp0s8
 ```
 
 These line is used to create a static route between *host-b* and *router-1*, *router-2*, *host-c* usign the interface enp0s8 with gateway 192.168.5.254:
 ```bash
-ip route add 192.168.6.0/23 via 192.168.5.254 dev enp0s8
+ip route add 192.168.4.0/23 via 192.168.3.254 dev enp0s8
 ```
 
 This line is used to make communication between subnet A and B available. If someone wish to do so, the line before should be commented and this one uncommented:
@@ -371,11 +374,10 @@ After the creation of the VM, Vagrant will run *host-2c.sh* provisioning script.
 ##### *Host 2C* provisioning script
 These lines are used to setup a repository and install docker engine:
 ```bash
-sudo su
 apt-get update
-sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
 apt-get install -y docker-ce
 ```
@@ -387,32 +389,32 @@ ip link set dev enp0s8 up
 
 This line assigns the appropriate IP address to the interface:
 ```bash
-ip addr add 192.168.6.1/24 dev enp0s8
+ip addr add 192.168.4.1/24 dev enp0s8
 ```
 
 These line is used to create a static route between *host-c* and *router-1*, *router-2*, *host-a*, *host-b* usign the interface enp0s8 with gateway 192.168.6.254:
 ```bash
-ip route add 192.168.0.0/16 via 192.168.6.254 dev enp0s8
+ip route add 192.168.0.0/16 via 192.168.4.254 dev enp0s8
 ```
 
 This line is used to pull the requested image from DockerHub:
 ```bash
-sudo docker pull dustnic82/nginx-test:latest
+docker pull dustnic82/nginx-test:latest
 ```
 
 This line is used to run the image pulled:
 ```bash
-sudo docker run --name Test-docker -p 80:80 -d dustnic82/nginx-test:latest
+docker run --name Test-docker -p 80:80 -d dustnic82/nginx-test:latest
 ```
 ##### Testing docker
 To verify that the docker image is running the following command can be used from host-c:
 ```bash
-sudo docker pc
+sudo docker ps
 ```
 
 This is the command to reach the docker from host-a and host-b:
 ```bash
-curl 192.168.6.1
+curl 192.168.4.1
 ```
 #### Switch
 VM for *switch* is created with the following code in the Vagrantfile:
